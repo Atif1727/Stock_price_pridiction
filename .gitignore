@@ -1,0 +1,4 @@
+./db.sqlite3
+kukbit\app\data
+kukbit\app\__pycache__
+virtualenv
