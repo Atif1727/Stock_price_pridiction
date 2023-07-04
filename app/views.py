@@ -22,6 +22,34 @@ from .stockPredictor import StockPredictor
 
 
 def index(request):
+    ticker_value="^BSESN"
+    try:
+        ticker_value = ticker_value.upper()
+        df = yf.download(tickers = ticker_value, period='1d', interval='1m')
+        print("Downloaded ticker = {} successfully".format(ticker_value))
+    except:
+        return render(request, 'API_Down.html', {})
+
+    ticker =ticker_value  # Ticker for NSE  Sensex Index
+    n_days = 10
+
+    stock_predictor = StockPredictor(ticker)
+    stock_predictor.load_data()
+    stock_predictor.train_model(p=5, d=1, q=0)  # Specify the order of the ARIMA model
+    forecast = stock_predictor.predict(n_days)
+
+    pred_dict = {"Date": [], "Prediction": []}
+    for i in range(0, len(forecast)):
+        pred_dict["Date"].append(dt.datetime.today() + dt.timedelta(days=i))
+        pred_dict["Prediction"].append(forecast[i])
+    
+    pred_df = pd.DataFrame(pred_dict)
+    pred_fig = go.Figure([go.Scatter(x=pred_df['Date'], y=pred_df['Prediction'])])
+    pred_fig.update_xaxes(rangeslider_visible=True)
+    pred_fig.update_layout(paper_bgcolor="#14151b", plot_bgcolor="#14151b", font_color="white")
+    plot_div_pred_chart1 = plot(pred_fig, auto_open=False, output_type='div')
+
+    
     # Check if the cached data exists
     cached_data = cache.get('stock_data')
 
@@ -89,7 +117,8 @@ def index(request):
 
     return render(request, 'index.html', {
         'plot_div_left': plot_div_left,
-        'recent_stocks': recent_stocks
+        'recent_stocks': recent_stocks,
+        'plot_div_pred_right':plot_div_pred_chart1,
     })
 
 

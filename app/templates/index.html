@@ -89,16 +89,29 @@
                             <img class="rounded-circle me-lg-2" src="{% static 'image/user.png' %}" alt="" style="width: 40px; height: 40px;">
                             <span class="d-none d-lg-inline-flex">Guest</span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                            <a href="/login" class="dropdown-item">Login</a>
-                            <a href="/Signup" class="dropdown-item">Signup</a>
-                        </div>
                     </div>
                 </div>
             </nav>
             <!-- Navbar End -->
 
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-12 col-xl-12">
+                        <div class="bg-secondary text-center rounded p-4">
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <h6 class="mb-0">Sensex market trends</h6>
+                            </div>
+                            {% block Right_Plot %}
 
+                                {% autoescape off %}
+                                    {{ plot_div_pred_right }}
+                                {% endautoescape %}
+
+                            {% endblock Right_Plot %}
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- Sales Chart Start -->
             <div class="container-fluid pt-4 px-4">
